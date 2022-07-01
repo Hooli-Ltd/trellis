@@ -17,3 +17,7 @@
 - name: mailhog
   src: geerlingguy.mailhog
   version: 2.2.0
+
+- name: trellis_wordfence
+  src: adleviton.trellis_wordfence
+  version: 1.0

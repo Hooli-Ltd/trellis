@@ -30,7 +30,3 @@
     no_scripts: "{{ composer_no_scripts }}"
     classmap_authoritative: "{{ composer_classmap_authoritative }}"
     working_dir: "{{ deploy_helper.new_release_path }}"
-
-- name: Setup Wordfence
-  include_role:
-    name: trellis-wordfence
