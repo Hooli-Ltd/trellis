@@ -15,6 +15,7 @@ vagrant_install_plugins: true
 vagrant_plugins:
   - name: vagrant-bindfs
   - name: vagrant-hostmanager
+  - name: vagrant-trellis-cert
 
 # Array of synced folders:
 # - local_path: .
