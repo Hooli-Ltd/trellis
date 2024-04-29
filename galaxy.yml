@@ -30,3 +30,6 @@ roles:
   - name: redis
     src: huubl.trellis_redis
     version: 0.1.0
+  - src: https://github.com/ItinerisLtd/trellis-cve-2018-6389
+    version: 0.1.0 # Check for latest version!
+    # Note: disable CONCATENATE_SCRIPTS in site config
