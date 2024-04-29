@@ -34,6 +34,8 @@ project_templates:
 project_shared_children:
   - path: "{{ project_public_path }}/{{ project_upload_path }}"
     src: uploads
+  - path: "{{ project_public_path }}/wflogs"
+    src: wflogs
 
 # The project_environment is a list of environment variables that can be used in hooks
 # Example:
