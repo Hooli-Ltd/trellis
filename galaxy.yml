@@ -26,3 +26,7 @@ roles:
   - name: do-agent
     src: andrewsomething.do-agent
     version: v1.1.1
+
+  - name: redis
+    src: huubl.trellis_redis
+    version: 0.1.0
