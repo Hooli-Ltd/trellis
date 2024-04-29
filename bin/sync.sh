@@ -1,0 +1,1 @@
+trellis-simple-sync/bin/sync.sh
