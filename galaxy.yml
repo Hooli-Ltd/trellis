@@ -22,4 +22,7 @@ roles:
 
   - name: wordfence
     src: adleviton.trellis_wordfence
-  
+
+  - name: do-agent
+    src: andrewsomething.do-agent
+    version: v1.1.1
