@@ -24,3 +24,6 @@ wordpress_sites:
       skip_cache_cookie: comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_no_cache|wordpress_logged_in|woocommerce_cart_hash|woocommerce_items_in_cart|wp_woocommerce_session_|edd_items_in_cart
     xmlrpc:
       enabled: false
+    htpasswd:
+      - name: hooli
+        password: example.com

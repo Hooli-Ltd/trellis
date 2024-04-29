@@ -33,4 +33,5 @@
     - { role: wordpress-setup, tags: [wordpress, wordpress-setup, letsencrypt] }
     - { role: trellis-cve-2018-6389, tags: [nginx, wordpress, wordpress-setup] }
     - { role: wordfence, tags: [wordpress, wordfence] }
+    - { role: bedrock-site-protect, tags: [htpasswd, wordpress] }
     - { role: do-agent, tags: [do-agent] }

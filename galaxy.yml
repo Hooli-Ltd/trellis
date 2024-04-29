@@ -30,6 +30,11 @@ roles:
   - name: redis
     src: huubl.trellis_redis
     version: 0.1.0
+
   - src: https://github.com/ItinerisLtd/trellis-cve-2018-6389
     version: 0.1.0 # Check for latest version!
     # Note: disable CONCATENATE_SCRIPTS in site config
+
+  - name: bedrock-site-protect
+    src: louim.bedrock-site-protect
+    version: 2.0.1
