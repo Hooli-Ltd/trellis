@@ -10,3 +10,11 @@
 #   command: wp acorn optimize
 #   args:
 #     chdir: "{{ deploy_helper.new_release_path }}"
+
+# - name: Create link for koko-analytics endpoint
+#   file:
+#     src: "{{ deploy_helper.new_release_path }}/web/app/plugins/{{ item.plugin }}/{{ item.file }}"
+#     dest: "{{ deploy_helper.new_release_path }}/web/wp/{{ item.file }}"
+#     state: link
+#   loop:
+#     - { file: koko-analytics-collect.php, plugin: koko-analytics }
