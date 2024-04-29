@@ -9,14 +9,14 @@ users:
     keys:
       - "{{ lookup('file', '~/.ssh/id_rsa.pub', errors='ignore') }}"
       - "{{ lookup('file', '~/.ssh/id_ed25519.pub', errors='ignore') }}"
-      # - https://github.com/username.keys
+      - https://github.com/robrecord.keys
   - name: "{{ admin_user }}"
     groups:
       - sudo
     keys:
       - "{{ lookup('file', '~/.ssh/id_rsa.pub', errors='ignore') }}"
       - "{{ lookup('file', '~/.ssh/id_ed25519.pub', errors='ignore') }}"
-      # - https://github.com/username.keys
+      - https://github.com/robrecord.keys
 
 web_user: web
 web_group: www-data
