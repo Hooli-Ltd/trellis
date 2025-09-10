@@ -4,8 +4,10 @@
 
 server {
   {% block server_id -%}
-  listen {{ ssl_enabled | ternary('[::]:443 ssl http2', '[::]:80') }};
-  listen {{ ssl_enabled | ternary('443 ssl http2', '80') }};
+  listen {{ ssl_enabled | ternary('[::]:443 ssl', '[::]:80') }};
+  listen {{ ssl_enabled | ternary('443 ssl', '80') }};
+  http2 {{ nginx_http2_enabled | default(false) | ternary('on', 'off') }};
+  http3 {{ nginx_http3_enabled | default(false) | ternary('on', 'off') }};
   server_name {{ site_hosts_canonical | union(multisite_subdomains_wildcards) | join(' ') }};
   {% endblock %}
 
@@ -18,6 +20,9 @@ server {
   root  {{ www_root }}/{{ item.key }}/{{ item.value.current_path | default('current') }}/{{ item.value.public_path | default('web') }};
   index index.php index.htm index.html;
   add_header Fastcgi-Cache $upstream_cache_status;
+
+  # Additional proxy header for WordPress (notably its Site Health check)
+  add_header X-Cache-Enabled $loopback_header_x_cache_enabled;
 
   # Specify a charset
   charset utf-8;
@@ -33,7 +38,7 @@ server {
   {% endblock -%}
 
   {% block cache_conditions -%}
-  {% if item.value.cache is defined and item.value.cache.enabled | default(false) -%}
+  {% if fastcgi_cache_enabled -%}
   # Fastcgi cache conditions
   set $skip_cache 0;
 
@@ -77,14 +82,11 @@ server {
   {% if ssl_enabled -%}
   # SSL configuration
   include h5bp/directive-only/ssl.conf;
-  {% if ssl_stapling_enabled -%}
-  include h5bp/directive-only/ssl-stapling.conf;
-  {% endif -%}
 
   ssl_buffer_size 1400; # 1400 bytes to fit in one MTU
 
   {% if item.value.ssl.provider | default('manual') != 'self-signed' -%}
-  add_header Strict-Transport-Security "max-age={{ [hsts_max_age, hsts_include_subdomains, hsts_preload] | reject('none') | join('; ') | trim }}";
+  add_header Strict-Transport-Security "max-age={{ [hsts_max_age, hsts_include_subdomains, hsts_preload] | reject('equalto', omit) | join('; ') | trim }}";
   {% endif -%}
 
   {% if item.value.ssl.client_cert_url is defined -%}
@@ -240,7 +242,7 @@ server {
     {% endblock -%}
 
     {% block cache_config -%}
-    {% if item.value.cache is defined and item.value.cache.enabled | default(false) -%}
+    {% if fastcgi_cache_enabled -%}
     # Fastcgi cache settings
     fastcgi_cache wordpress;
     fastcgi_cache_valid {{ item.value.cache.duration | default(nginx_cache_duration) }};
@@ -253,6 +255,7 @@ server {
 
     {% block fastcgi_basic -%}
     include fastcgi_params;
+    fastcgi_param SERVER_NAME $host;
     fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
     fastcgi_param DOCUMENT_ROOT $realpath_root;
     fastcgi_pass unix:/var/run/php-fpm-wordpress.sock;
@@ -290,11 +293,13 @@ server {
 {% for host in item.value.site_hosts if host.redirects | default([]) %}
 server {
   {% if ssl_enabled -%}
-  listen [::]:443 ssl http2;
-  listen 443 ssl http2;
+  listen [::]:443 ssl;
+  listen 443 ssl;
   {% endif -%}
   listen [::]:80;
   listen 80;
+  http2 {{ nginx_http2_enabled | default(false) | ternary('on', 'off') }};
+  http3 {{ nginx_http3_enabled | default(false) | ternary('on', 'off') }};
   server_name {{ host.redirects | join(' ') }};
 
   {{ self.https() -}}
